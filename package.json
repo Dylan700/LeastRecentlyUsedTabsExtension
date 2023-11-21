@@ -1,0 +1,52 @@
+{
+  "name": "lru-tabs",
+  "displayName": "Least Recently Used Tabs",
+  "description": "Close least recently used tabs automatically and keep frequently used tabs to the left",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Least Recently Used Tabs",
+      "properties": {
+        "lrutabs.maxTabs": {
+          "type": "number",
+          "default": 5,
+          "description": "The number of tabs to keep open before closing the least recently used tabs."
+        },
+        "lrutabs.closeTabs": { 
+        "type": "boolean",
+        "default": true,
+        "description": "Whether to close least recently used tabs."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "fix-lint": "eslint src --ext ts --fix",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.84.0",
+    "@types/mocha": "^10.0.3",
+    "@types/node": "18.x",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "eslint": "^8.52.0",
+    "glob": "^10.3.10",
+    "mocha": "^10.2.0",
+    "typescript": "^5.2.2",
+    "@vscode/test-electron": "^2.3.6"
+  }
+}
