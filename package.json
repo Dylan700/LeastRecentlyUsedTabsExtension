@@ -1,5 +1,7 @@
 {
   "name": "lru-tabs",
+  "repository": "https://github.com/Dylan700/LeastRecentlyUsedTabsExtension",
+  "publisher": "dylan700",
   "displayName": "Least Recently Used Tabs",
   "description": "Close least recently used tabs automatically and keep frequently used tabs to the left",
   "version": "0.0.1",
