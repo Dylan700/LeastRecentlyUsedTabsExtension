@@ -34,11 +34,6 @@ jobs:
         git config --local user.name "GitHub Action"
         git commit -am "Update version to $VERSION"
 
-    - name: Package and publish extension
-      env:
-        VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
-      run: vsce publish -p $VSCE_TOKEN
-
     - name: Apply latest tag
       run: |
         git tag -fa @latest -m "Update @latest tag"
@@ -54,3 +49,8 @@ jobs:
           -d '{
             "target_commitish": "master"
           }'
+
+    - name: Package and publish extension
+      env:
+        VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
+      run: vsce publish -p $VSCE_TOKEN
