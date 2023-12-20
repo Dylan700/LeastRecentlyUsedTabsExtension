@@ -1,0 +1,56 @@
+name: Publish VS Code Extension
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    - name: Install jq
+      run: sudo apt-get install jq
+
+    - name: Install vsce
+      run: npm install -g vsce
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Update version in package.json
+      run: |
+        VERSION=${{ github.event.release.tag_name }}
+        jq '.version = "'${VERSION#v}'"' package.json > tmp.json && mv tmp.json package.json
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -am "Update version to $VERSION"
+
+    - name: Package and publish extension
+      env:
+        VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
+      run: vsce publish -p $VSCE_TOKEN
+
+    - name: Apply latest tag
+      run: |
+        git tag -fa @latest -m "Update @latest tag"
+        git push origin @latest
+
+    - name: Update release
+      run: |
+        curl \
+          -X PATCH \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.repository }}/releases/${{ github.event.release.id }} \
+          -d '{
+            "target_commitish": "master"
+          }'

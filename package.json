@@ -5,6 +5,7 @@
   "displayName": "Least Recently Used Tabs",
   "description": "Close least recently used tabs automatically and keep frequently used tabs to the left",
   "version": "0.0.1",
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.84.0"
   },
