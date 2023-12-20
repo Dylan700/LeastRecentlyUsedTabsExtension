@@ -9,6 +9,7 @@
   "engines": {
     "vscode": "^1.84.0"
   },
+  "keywords": ["tabs", "workspace", "productivity"],
   "categories": [
     "Other"
   ],
