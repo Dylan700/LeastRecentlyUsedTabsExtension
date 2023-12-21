@@ -4,16 +4,22 @@
   "publisher": "dylan700",
   "displayName": "Least Recently Used Tabs",
   "description": "Close least recently used tabs automatically and keep frequently used tabs to the left",
-  "version": "0.0.1",
+  "version": "1.0.4",
   "icon": "icon.png",
   "engines": {
     "vscode": "^1.84.0"
   },
-  "keywords": ["tabs", "workspace", "productivity"],
+  "keywords": [
+    "tabs",
+    "workspace",
+    "productivity"
+  ],
   "categories": [
     "Other"
   ],
-  "activationEvents": ["onStartupFinished"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {
@@ -24,10 +30,10 @@
           "default": 5,
           "description": "The number of tabs to keep open before closing the least recently used tabs."
         },
-        "lrutabs.closeTabs": { 
-        "type": "boolean",
-        "default": true,
-        "description": "Whether to close least recently used tabs."
+        "lrutabs.closeTabs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to close least recently used tabs."
         }
       }
     }
