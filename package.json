@@ -35,6 +35,11 @@
           "default": true,
           "description": "Whether to close least recently used tabs."
         }
+        "lrutabs.reorderTabs": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to reorder tabs after click."
+        }
       }
     }
   },
