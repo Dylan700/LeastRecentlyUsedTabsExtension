@@ -34,10 +34,10 @@
           "type": "boolean",
           "default": true,
           "description": "Whether to close least recently used tabs."
-        }
+        },
         "lrutabs.reorderTabs": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Whether to reorder tabs after click."
         }
       }
