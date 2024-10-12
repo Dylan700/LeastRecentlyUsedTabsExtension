@@ -28,7 +28,7 @@ const removeLRUTabs = (group: vscode.TabGroup, maxTabs: number): void => {
 
     const tabsToClose: vscode.Tab[] = [];
     group.tabs.slice(0).reverse().forEach(tab => {
-        if(!tab.isDirty && !tab.isPinned && (group.tabs.length - tabsToClose.length) > maxTabs){
+        if(!tab.isDirty && !tab.isPinned && !tab.isPreview && (group.tabs.length - tabsToClose.length) > maxTabs){
             tabsToClose.push(tab);
         }       
     });
