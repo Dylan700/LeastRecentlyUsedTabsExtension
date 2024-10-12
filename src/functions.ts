@@ -9,15 +9,26 @@ const getNumberOfTabs = (group: vscode.TabGroup): number => {
 // a separate copy of tabs is kept to track the order
 const reorderTabs = (group: vscode.TabGroup): void => {
     const activeTab = group.tabs.find(tab => tab.isActive);
+    const numberOfPinnedTabs = group.tabs.filter(tab => tab.isPinned).length;
     // this occurs if there is no tab
     if(activeTab === undefined){
         return;
     }
 
+    // don't touch pinned tabs
+    if(activeTab.isPinned){
+        return;
+    }
     const index = group.tabs.indexOf(activeTab);
 
-    // move current tab position to the start
-    vscode.commands.executeCommand('moveActiveEditor', { to: 'left', by: 'tab', value: index });
+    // check if tab is already in the correct position (this happens when it's called twice sometimes)
+    var targetIndex = numberOfPinnedTabs;
+    if(targetIndex == index){
+        return;
+    }
+
+    // move current tab position to the start, but not before pinned tabs
+    vscode.commands.executeCommand('moveActiveEditor', { to: 'left', by: 'tab', value: index-numberOfPinnedTabs });
 };
 
 // remove least recently used tabs (but only if they aren't dirty and not pinned, we don't want to touch those dirty tabs otherwise we could get a disease right?)
