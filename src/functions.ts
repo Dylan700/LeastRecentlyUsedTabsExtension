@@ -23,7 +23,7 @@ const reorderTabs = (group: vscode.TabGroup): void => {
 
     // check if tab is already in the correct position (this happens when it's called twice sometimes)
     var targetIndex = numberOfPinnedTabs;
-    if(targetIndex == index){
+    if(targetIndex === index){
         return;
     }
 
