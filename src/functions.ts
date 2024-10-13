@@ -29,6 +29,7 @@ const reorderTabs = (group: vscode.TabGroup): void => {
 
     // move current tab position to the start, but not before pinned tabs
     vscode.commands.executeCommand('moveActiveEditor', { to: 'left', by: 'tab', value: index-numberOfPinnedTabs });
+    vscode.commands.executeCommand('workbench.action.unpinEditor');
 };
 
 // remove least recently used tabs (but only if they aren't dirty and not pinned, we don't want to touch those dirty tabs otherwise we could get a disease right?)
