@@ -27,3 +27,6 @@ This extension contributes the following settings:
 * `lrutabs.maxTabs`: Define the number of tabs to keep open at a given time.
 * `lrutabs.closeTabs`: Whether to close least recently used tabs.
 * `lrutabs.reorderTabs`: Whether to reorder tabs after click.
+
+## Contributors
+Special thanks to @Megaemce!
