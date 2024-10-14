@@ -1,53 +1,75 @@
-// this file defines the main functions of the extension
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import { tabTracker } from "./tabTracker";
 
-const getNumberOfTabs = (group: vscode.TabGroup): number => {
-    return group.tabs.length;
-};
-
-// reorder the tabs in a tab group based on the currently active tab. The most recently active tabs will be closest to the left 
-// a separate copy of tabs is kept to track the order
+/**
+ * Reorders the tabs in a tab group based on the currently active tab.
+ * The most recently active tabs will be closest to the left.
+ *
+ * @param {vscode.TabGroup} group - The tab group to reorder
+ */
 const reorderTabs = (group: vscode.TabGroup): void => {
-    const activeTab = group.tabs.find(tab => tab.isActive);
-    const numberOfPinnedTabs = group.tabs.filter(tab => tab.isPinned).length;
-    // this occurs if there is no tab
-    if(activeTab === undefined){
+    const activeTab = group.tabs.find((tab) => tab.isActive);
+    const numberOfPinnedTabs = group.tabs.filter((tab) => tab.isPinned).length;
+
+    // This occurs if there is no active tab
+    if (activeTab === undefined) {
         return;
     }
 
-    // don't touch pinned tabs
-    if(activeTab.isPinned){
+    // Don't move pinned tabs
+    if (activeTab.isPinned) {
         return;
     }
     const index = group.tabs.indexOf(activeTab);
 
-    // check if tab is already in the correct position (this happens when it's called twice sometimes)
-    var targetIndex = numberOfPinnedTabs;
-    if(targetIndex === index){
+    // Check if tab is already in the correct position (this happens when it's called twice sometimes)
+    if (numberOfPinnedTabs === index) {
         return;
     }
-
-    // move current tab position to the start, but not before pinned tabs
-    vscode.commands.executeCommand('moveActiveEditor', { to: 'left', by: 'tab', value: index-numberOfPinnedTabs });
-    vscode.commands.executeCommand('workbench.action.unpinEditor');
-};
-
-// remove least recently used tabs (but only if they aren't dirty and not pinned, we don't want to touch those dirty tabs otherwise we could get a disease right?)
-const removeLRUTabs = (group: vscode.TabGroup, maxTabs: number): void => {
-    if(group.tabs.length <= maxTabs){
-        return;
-    }
-
-    const tabsToClose: vscode.Tab[] = [];
-    group.tabs.slice(0).reverse().forEach(tab => {
-        if(!tab.isDirty && !tab.isPinned && !tab.isPreview && (group.tabs.length - tabsToClose.length) > maxTabs){
-            tabsToClose.push(tab);
-        }       
+    // Move current tab position to the start, not before pinned tabs
+    vscode.commands.executeCommand("moveActiveEditor", {
+        to: "left",
+        by: "tab",
+        value: index - numberOfPinnedTabs,
     });
 
-    // actually close the tabs here
-    tabsToClose.forEach(tab => vscode.window.tabGroups.close(tab));
+    vscode.commands.executeCommand("workbench.action.unpinEditor");
+};
 
+/**
+ * Removes least recently used tabs, but only if they aren't dirty and not pinned.
+ * We don't want to touch those dirty tabs otherwise we could get a disease, right?
+ *
+ * @param {vscode.TabGroup} group - The tab group to remove tabs from
+ * @param {number} maxTabs - The maximum number of tabs to keep open
+ */
+const removeLRUTabs = (group: vscode.TabGroup, maxTabs: number): void => {
+    const tabsToClose: vscode.Tab[] = [];
+
+    if (group.tabs.length <= maxTabs) {
+        return;
+    }
+
+    // Sort tabs based on their last active timestamp
+    const sortedTabs = group.tabs.slice().sort((a, b) => {
+        return tabTracker.getTimestamp(a) - tabTracker.getTimestamp(b);
+    });
+
+    sortedTabs.forEach((tab) => {
+        // Don't close the active tab, dirty tabs, pinned tabs, or preview tabs
+        if (
+            !tab.isActive &&
+            !tab.isDirty &&
+            !tab.isPinned &&
+            !tab.isPreview &&
+            group.tabs.length - tabsToClose.length > maxTabs
+        ) {
+            tabsToClose.push(tab);
+        }
+    });
+
+    // Actually close the tabs here
+    tabsToClose.forEach((tab) => vscode.window.tabGroups.close(tab));
 };
 
 export { reorderTabs, removeLRUTabs };
