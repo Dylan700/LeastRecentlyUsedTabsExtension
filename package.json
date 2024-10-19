@@ -4,7 +4,7 @@
   "publisher": "dylan700",
   "displayName": "Least Recently Used Tabs",
   "description": "Close least recently used tabs automatically and keep frequently used tabs to the left",
-  "version": "1.1.2",
+  "version": "1.1.1",
   "icon": "icon.png",
   "engines": {
     "vscode": "^1.84.0"
